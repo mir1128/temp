@@ -1,0 +1,205 @@
+
+
+first step:
+
+1. equal with same unit
+2. equal with different unit
+3. add
+4. subtract
+5. mulitiplication
+
+
+TEST(TestLength, ShouldEqualWhenTweLengthHaveSameValueAndUnit)
+{
+	ASSERT_TRUE( Length(10.5, "m") == Length(10.5, "m"));
+}
+
+TEST(TestLength, ShouldEqualWhenTweLengthHaveDifferentValueAndUnit)
+{
+	ASSERT_TRUE( Length(10.5, "m") == Length(1050, "mm"));
+}
+
+
+class Length
+{
+public:
+	Length(double value, std::string unit):value_(value), unit_(unit){}
+	bool operator == (const Length& other)
+	{
+		const double e = 0.0000001;
+		return abs(convertToMM() - other.convertToMM()) <  e;
+	}
+
+private:
+	double convertToMM() const
+	{
+		if (unit_ == "m")
+		{
+			return value_ * 1000;				/* code */
+		}else if (unit_ == "cm")
+		{
+			return value_ * 10;
+		}else{
+			return value_;
+		}			
+	}
+private:
+	double value_;
+	std::string unit_;
+};
+
+
+
+second step:
+1. equal with same unit                //(解决)
+2. equal with different unit           //（解决）
+3. add
+4. subtract
+5. mulitiplication
+6. replace std::string with enum        
+
+
+TEST(TestLength, ShouldEqualWhenTweLengthHaveSameValueAndUnit)
+{
+	ASSERT_TRUE( Length(10.5, M) == Length(10.5, M));
+}
+
+TEST(TestLength, ShouldEqualWhenTweLengthHaveDifferentValueAndUnit)
+{
+	ASSERT_TRUE( Length(10.5, M) == Length(1050, MM));
+}
+
+
+enum UNIT
+{
+	M = 1000,
+	CM = 10,
+	MM = 1
+};
+
+class Length
+{
+public:
+	Length(double value, UNIT unit):value_(value), unit_(unit){};
+	bool operator == (const Length& other)
+	{
+		const double e = 0.0000001;
+		return abs(convertToMM() - other.convertToMM()) <  e;
+	}
+
+private:
+	double double convertToMM() const
+	{
+		return value_ * unit_;			
+	}
+private:
+	double value_;
+	UNIT unit_;
+};
+
+
+third step:
+1. equal with same unit                //(解决)
+2. equal with different UNIT           //(解决)
+3. add
+4. subtract
+5. mulitiplication
+6. replace std::string with enum     // (解决)
+
+
+
+TEST(TestLength, ShouldEqualWhenTweLengthHaveSameValueAndUnit)
+{
+	ASSERT_TRUE( Length(10.5, M) == Length(10.5, M));
+}
+
+TEST(TestLength, ShouldEqualWhenTweLengthHaveDifferentValueAndUnit)
+{
+	ASSERT_TRUE( Length(10.5, M) == Length(1050, MM));
+}
+
+class Length
+{
+public:
+	Length(double value, UNIT unit):value_(value), unit_(unit){};
+	bool operator == (const Length& other)
+	{
+		const double e = 0.0000001;
+		return abs(convertToMM() - other.convertToMM()) <  e;
+	}
+
+private:
+	double double convertToMM() const
+	{
+		return value_ * unit_;			
+	}
+private:
+	double value_;
+	UNIT unit_;
+};
+
+
+forth step:
+1. equal with same unit                //(解决)
+2. equal with different UNIT           //(解决)
+3. add
+   1) add with same UNIT
+   2) add with diffent UNIT
+4. subtract
+5. mulitiplication
+6. replace std::string with enum     // (解决)
+
+TEST(TestLength, ShouldReturnCorrectWhenAddWithSameUnit)
+{
+	ASSERT_EQ(Length(450, MM), Length(210, MM) + Length(240, MM));
+	ASSERT_EQ(Length(45, CM), Length(210, MM) + Length(240, MM));
+	ASSERT_EQ(Length(0.45, M), Length(210, MM) + Length(240, MM));
+
+	ASSERT_EQ(Length(450, MM), Length(21, CM) + Length(24, CM));
+	ASSERT_EQ(Length(450, MM), Length(0.21, M) + Length(0.24, M));
+}
+
+
+class Length
+{
+public:
+	Length(double value, UNIT unit):value_(value), unit_(unit){};
+	bool operator == (const Length& other)
+	{
+		const double e = 0.0000001;
+		return abs(convertToMM() - other.convertToMM()) <  e;
+	}
+
+	Length operator+(const Length& other)
+	{
+		return Length(convertToMM() + other.convertToMM(), MM);
+	}
+
+private:
+	double double convertToMM() const
+	{
+		return value_ * unit_;			
+	}
+private:
+	double value_;
+	UNIT unit_;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
